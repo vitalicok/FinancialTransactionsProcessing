@@ -1,0 +1,27 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
+WORKDIR /app
+
+COPY ./FinancialTransactionsProcessing/FinancialTransactionsProcessing/*.csproj .
+RUN dotnet restore
+
+COPY ./FinancialTransactionsProcessing/FinancialTransactionsProcessing/ .
+
+# Build the application
+RUN dotnet publish -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+
+WORKDIR /app
+
+# Create /app/scripts directory
+RUN mkdir -p /app/scripts
+
+COPY --from=build /app/out .
+
+# Set environment variable for SQL Server connection string
+ENV CONNECTION_STRING="Server=sql_server_container,1433;Initial Catalog=FinancialTransactionsProcessing;User ID=sa;Password=3nbr3u2@!fwo;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;MultipleActiveResultSets=true"
+
+EXPOSE 5000
+
+ENTRYPOINT ["dotnet", "FinancialTransactionsProcessing.dll"]

@@ -1,0 +1,41 @@
+services:
+  db:
+    container_name: mssql
+    build:
+      context: ..
+      dockerfile: docker_compose/Dockerfile.SQLDatabase
+    ports:
+      - "${SQL_PORT:-1433}:1433"
+    environment:
+        SA_PASSWORD: ${SA_PASSWORD}
+        ACCEPT_EULA: ${ACCEPT_EULA}
+        MSSQL_PID: "Developer"
+        MSSQL_TCP_PORT: 1433
+    volumes:
+      - mssql_data:/var/opt/mssql/data
+    networks:
+      - app-network
+  app:
+    container_name: app
+    build:
+      context: ..
+      dockerfile: docker_compose/Dockerfile.WebApp
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
+    environment:
+      - DATA_PATH=/app/data
+      - PROJECT_PATH=/app/project
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=FinancialTransactionsProcessing;User Id=sa;Password=${SA_PASSWORD};Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;MultipleActiveResultSets=true
+    volumes:
+      - ./scripts:/app/scripts
+    networks:
+      - app-network
+        
+networks:
+  app-network:
+    driver: bridge
+volumes:
+  mssql_data:
