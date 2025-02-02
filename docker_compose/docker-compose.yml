@@ -30,7 +30,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Server=db;Database=FinancialTransactionsProcessing;User Id=sa;Password=${SA_PASSWORD};Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;MultipleActiveResultSets=true
     volumes:
-      - ./scripts:/app/scripts
+      - ./result:/app/result
     networks:
       - app-network
         

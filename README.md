@@ -9,6 +9,14 @@ Evaluator that consumes CSV files to produce reports of customer expenses and ca
 
 `dotnet run --project ./FinancialTransactionsProcessing/FinancialTransactionsProcessing/FinancialTransactionsProcessing.csproj` - Run Console project by executing from the repo root directory
 
+OR
+
+`docker-compose -f docker_compose/docker-compose.yml up --build` - this will roll out two containers for database and web application
+
+OR
+
+go `\scripts` and run `run-docker-compose`
+
 # Mac OS
 
 `docker build . -f  docker_compose/Dockerfile.SQLDatabase -t macsql`
@@ -19,4 +27,8 @@ and run project locally `dotnet run --project ./FinancialTransactionsProcessing/
 
 OR
 
-`docker-compose up -d` - this will roll out two containers for database and web application
+`docker-compose -f docker_compose/docker-compose.mac.yml up --build` - this will roll out two containers for database and web application
+
+OR
+
+go `\scripts` and run `run-docker-compose-mac`
